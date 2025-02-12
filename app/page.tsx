@@ -27,9 +27,7 @@ import { useChat } from "@ai-sdk/react";
 
 import LandingSections from "@/components/LandingSections";
 
-
-export default function Chat() 
-{
+export default function Chat() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showChatIcon, setShowChatIcon] = useState(false);
   const chatIconRef = useRef<HTMLButtonElement>(null);
@@ -43,7 +41,7 @@ export default function Chat()
     stop,
     reload,
     error,
-  } = useChat ({ api: "/api/gemini" });
+  } = useChat({ api: "/api/gemini" });
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +56,6 @@ export default function Chat()
     };
 
     handleScroll();
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
@@ -82,20 +79,20 @@ export default function Chat()
       <AnimatePresence>
         {showChatIcon && (
           <motion.div
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 100 }}
-          transition={{ duration: 0.2 }}
-          className="fixed bottom-4 right-4 z-50"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-4 right-4 z-50"
           >
             <Button
-            ref={chatIconRef}
-            onClick={toggleChat}
-            size="icon"
-            className="rounded-full size-14 p-2 shadow-lg"
+              ref={chatIconRef}
+              onClick={toggleChat}
+              size="icon"
+              className="rounded-full size-14 p-2 shadow-lg"
             >
               {!isChatOpen ? (
-                <MessageCircle className="size-12"/>  
+                <MessageCircle className="size-12" />
               ) : (
                 <ArrowDownCircleIcon />
               )}
@@ -106,11 +103,11 @@ export default function Chat()
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          transition={{ duration: 0.2 }}
-          className="fixed bottom-20 right-4 z-50 w-[95%] md:w-[500px]"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-20 right-4 z-50 w-[95%] md:w-[500px]"
           >
             <Card className="border-2">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
@@ -118,10 +115,10 @@ export default function Chat()
                   Chat with Zaki Ai
                 </CardTitle>
                 <Button
-                onClick={toggleChat}
-                size="icon"
-                variant="ghost"
-                className="px-2 py-0"
+                  onClick={toggleChat}
+                  size="icon"
+                  variant="ghost"
+                  className="px-2 py-0"
                 >
                   <X className="size-4" />
                   <span className="sr-only">Close Chat</span>
@@ -131,81 +128,62 @@ export default function Chat()
                 <ScrollArea className="h-[300px] pr-4">
                   {messages?.length === 0 && (
                     <div className="w-full mt-32 text-gray-500 items-center justify-center flex gap-3">
-                    No Message Yet..
+                      No Message Yet..
                     </div>
                   )}
-                  {messages?.map ((message, index) => (
+                  {messages?.map((message, index) => (
                     <div
-                    key={index}
-                    className={`mb-4 ${
-                      message.role === "user" ? "text-right" : "text-left"
-                    }`}
+                      key={index}
+                      className={`mb-4 ${message.role === "user" ? "text-right" : "text-left"
+                        }`}
                     >
                       <div
-                        className={`inline-block p-4 rounded-lg ${
-                          message.role === "user"
+                        className={`inline-block p-4 rounded-lg ${message.role === "user"
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted"
-                        }`}
+                          }`}
                       >
-                        <ReactMarkdown 
+                        <ReactMarkdown
                           children={message.content}
                           remarkPlugins={[remarkGfm]}
                           components={{
-                            code({
-                              node,
-                              inline,
-                              className,
-                              children,
-                              ...props
-                            }) {
-                              return inline ? (
-                                <code
-                                  {...props}
-                                  className="bg-gray-200 px-1 rounded"
-                                >
+                            code({ className, children, ...props }) {
+                              // Determine if it's inline by checking if children is a string
+                              const isInline = typeof children === "string" ||
+                                (Array.isArray(children) && children.length === 1);
+
+                              return isInline ? (
+                                <code {...props} className="bg-gray-200 px-1 rounded">
                                   {children}
                                 </code>
                               ) : (
-                                <pre
-                                  {...props}
-                                  className="bg-gray-200 p-2 rounded"
-                                >
-                                  <code>{children}</code>
+                                <pre className="bg-gray-200 p-2 rounded">
+                                  <code className={className} {...props}>{children}</code>
                                 </pre>
                               );
                             },
-                            ul: ({ children }) => (
-                              <ul className="list-disc ml-4">{children}</ul>
-                            ),
-                            ol: ({ children }) => (
-                              <li className="list-decimal ml-4">{children}</li>
-                            ),
+                            ul: ({ children }) => <ul className="list-disc ml-4">{children}</ul>,
+                            ol: ({ children }) => <ol className="list-decimal ml-4">{children}</ol>,
                           }}
                         />
+
+
+
                       </div>
                     </div>
                   ))}
                   {isLoading && (
                     <div className="w-full items-center flex justify-center gap-3">
                       <Loader2 className="animate-spin h-5 w-5 text-primary" />
-                      <button
-                      className="underline"
-                      type="button"
-                      onClick={() => stop()}
-                      >
-                        Loading...  
+                      <button className="underline" type="button" onClick={() => stop()}>
+                        Loading...
                       </button>
                     </div>
                   )}
                   {error && (
                     <div className="w-full items-center flex justify-center gap-3">
-                      <div>An Error Occured</div>
-                      <button
-                      className="underline"
-                      type="button"
-                      onClick={() => reload()}
-                      >
+                      <div>An Error Occurred</div>
+                      <button className="underline" type="button" onClick={() => reload()}>
                         Retry
                       </button>
                     </div>
@@ -214,22 +192,14 @@ export default function Chat()
                 </ScrollArea>
               </CardContent>
               <CardFooter>
-                <form 
-                onSubmit={handleSubmit}
-                className="flex w-full items-center space-x-2"
-                >
-                  <Input 
+                <form onSubmit={handleSubmit} className="flex w-full items-center space-x-2">
+                  <Input
                     value={input}
                     onChange={handleInputChange}
                     className="flex-1"
                     placeholder="Type Your Message Here...."
                   />
-                  <Button
-                    type="submit"
-                    className="size-9"
-                    disabled={isLoading}
-                    size="icon"
-                  >
+                  <Button type="submit" className="size-9" disabled={isLoading} size="icon">
                     <Send className="size-4" />
                   </Button>
                 </form>
