@@ -9,7 +9,7 @@ const Header = () => {
       <div className="container flex h-14 items-center justify-between">
         <div className="mr-4 hidden md:flex">
           <Link className="mr-6 flex items-center space-x-2" href="/">
-            <span className="hidden font-bold sm:inline-block">NoteWorthy</span>
+            <span className="hidden font-bold sm:inline-block">Zaki AI</span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <Link href="#features">Features</Link>
@@ -24,10 +24,10 @@ const Header = () => {
         <div className="flex items-center space-x-2">
           <nav className="flex items-center">
             <Button variant="ghost" asChild>
-              <Link href="/login">Log in</Link>
+              <Link href="/">Log in</Link>
             </Button>
             <Button asChild>
-              <Link href="/signup">Sign up</Link>
+              <Link href="/">Sign up</Link>
             </Button>
           </nav>
         </div>
