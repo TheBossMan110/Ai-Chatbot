@@ -144,7 +144,6 @@ export default function Chat() {
                           }`}
                       >
                         <ReactMarkdown
-                          children={message.content}
                           remarkPlugins={[remarkGfm]}
                           components={{
                             code({ className, children, ...props }) {
@@ -165,10 +164,9 @@ export default function Chat() {
                             ul: ({ children }) => <ul className="list-disc ml-4">{children}</ul>,
                             ol: ({ children }) => <ol className="list-decimal ml-4">{children}</ol>,
                           }}
-                        />
-
-
-
+                        >
+                          {message.content}
+                        </ReactMarkdown>
                       </div>
                     </div>
                   ))}
